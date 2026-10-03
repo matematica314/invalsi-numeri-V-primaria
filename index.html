@@ -199,7 +199,7 @@
                 <!-- Character Banner -->
                 <div class="my-6 flex justify-center">
                     <div class="relative bg-gradient-to-b from-sky-100 to-indigo-100 p-4 rounded-3xl border border-sky-200 max-w-md w-full shadow-inner flex flex-col items-center">
-                        <img src="Mate e Carl su sfondo trasparente.png" alt="Mate e Carlo" class="h-56 md:h-64 object-contain filter drop-shadow-lg transform hover:scale-105 transition duration-300" onerror="this.onerror=null; this.src='https://placehold.co/400x300/e0f2fe/0284c7?text=Mate+e+Carlo';">
+                        <img src="Mate e Carl su sfondo trasparente.png" alt="Mate e Carl" class="h-56 md:h-64 object-contain filter drop-shadow-lg transform hover:scale-105 transition duration-300" onerror="this.onerror=null; this.src='https://placehold.co/400x300/e0f2fe/0284c7?text=Mate+e+Carl';">
                         <div class="mt-3 bg-white/90 px-4 py-2 rounded-2xl shadow border border-slate-100 text-center">
                             <span class="font-bold text-slate-800 text-sm">Mate & Carl</span>
                             <p class="text-xs text-slate-500">I tuoi personal trainer di matematica!</p>
@@ -302,6 +302,42 @@
             </div>
         </div>
 
+        <!-- PRIVACY POLICY MODAL -->
+        <div id="privacyModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+            <div class="bg-white rounded-3xl max-w-lg w-full p-6 md:p-8 shadow-2xl border border-slate-100 transform transition-all scale-95 opacity-0 duration-200" id="privacyContent">
+                <div class="flex items-center justify-between mb-4 border-b border-slate-100 pb-3">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-2xl bg-brand-100 text-brand-600 flex items-center justify-center font-bold text-lg">
+                            <i class="fa-solid fa-user-shield"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-heading font-bold text-xl text-slate-800">Informativa Privacy</h4>
+                            <p class="text-xs text-slate-500">Trasparenza e tutela per gli studenti</p>
+                        </div>
+                    </div>
+                    <button onclick="togglePrivacyModal()" class="text-slate-400 hover:text-slate-600 p-2 rounded-xl bg-slate-100 hover:bg-slate-200 transition">
+                        <i class="fa-solid fa-xmark text-lg"></i>
+                    </button>
+                </div>
+
+                <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200 text-slate-700 text-xs md:text-sm leading-relaxed space-y-3 custom-scrollbar max-h-72 overflow-y-auto">
+                    <p><strong>Informativa sulla Privacy e Trattamento Dati:</strong></p>
+                    <p>La presente applicazione web è sviluppata esclusivamente per scopi didattici e d'allenamento scolastico.</p>
+                    <ul class="list-disc list-inside space-y-1 text-slate-600">
+                        <li><strong>Nessuna raccolta dati:</strong> L'applicazione non richiede registrazione, non utilizza cookie di profilazione e non trasmette alcun dato personale a server esterni.</li>
+                        <li><strong>Elaborazione Locale:</strong> I dati inseriti (come il nome per la personalizzazione dell'attestato) ed i punteggi ottenuti sono trattati esclusivamente nella memoria del browser del tuo dispositivo.</li>
+                    </ul>
+                    <p class="pt-2 text-slate-500 italic">Per chiarimenti o informazioni sui contenuti didattici, è possibile contattare l'autrice Claudia Bartoli.</p>
+                </div>
+
+                <div class="mt-6">
+                    <button onclick="togglePrivacyModal()" class="w-full btn-bounce bg-brand-500 hover:bg-brand-600 text-white font-heading font-bold py-3 px-6 rounded-2xl shadow-md transition">
+                        Ho Capito
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <!-- SCREEN 4: CERTIFICATE SECTION -->
         <section id="certificateScreen" class="w-full hidden transition-all duration-300">
             <div class="mb-6 flex flex-col md:flex-row items-center justify-between gap-4 no-print">
@@ -375,10 +411,10 @@
                 <!-- Footer with Characters -->
                 <div class="mt-8 pt-6 border-t border-slate-200 flex flex-col md:flex-row items-center justify-between gap-6">
                     <div class="flex items-center space-x-3">
-                        <img src="Mate e Carl su sfondo trasparente.png" alt="Mate e Carlo" class="h-16 object-contain" onerror="this.onerror=null; this.src='https://placehold.co/100x100/e0f2fe/0284c7?text=Mate+Carlo';">
+                        <img src="Mate e Carl su sfondo trasparente.png" alt="Mate e Carl" class="h-16 object-contain" onerror="this.onerror=null; this.src='https://placehold.co/100x100/e0f2fe/0284c7?text=Mate+Carl';">
                         <div class="text-left text-xs">
                             <span class="font-bold text-slate-800 block">Mate e Carl</span>
-                            <span class="text-slate-500">I tuoi Tutor Digitale</span>
+                            <span class="text-slate-500">I tuoi Tutor Digitali</span>
                         </div>
                     </div>
 
@@ -393,8 +429,14 @@
     </main>
 
     <!-- Footer -->
-    <footer class="w-full bg-white/60 border-t border-slate-200 py-3 px-4 text-center text-xs text-slate-500 no-print mt-8">
-        <p>© 2026 MatematiCAMP • Attività per la Scuola Primaria - Ispirato alle Prove INVALSI di Matematica</p>
+    <footer class="w-full bg-white/80 border-t border-slate-200 py-3.5 px-4 text-center text-xs text-slate-600 no-print mt-8 shadow-inner">
+        <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+            <p>© 2026 MatematiCAMP • A cura di <span class="font-semibold text-slate-700">Claudia Bartoli</span> • Tutti i diritti riservati</p>
+            <button onclick="togglePrivacyModal()" class="text-slate-500 hover:text-brand-600 underline font-medium flex items-center space-x-1.5 transition">
+                <i class="fa-solid fa-user-shield text-xs"></i>
+                <span>Informativa Privacy</span>
+            </button>
+        </div>
     </footer>
 
     <!-- Balloon Animation Container -->
@@ -480,6 +522,24 @@
                 btn.className = 'fa-solid fa-volume-high text-lg';
             } else {
                 btn.className = 'fa-solid fa-volume-xmark text-lg text-rose-500';
+            }
+        }
+
+        function togglePrivacyModal() {
+            const modal = document.getElementById('privacyModal');
+            const content = document.getElementById('privacyContent');
+            if (modal.classList.contains('hidden')) {
+                modal.classList.remove('hidden');
+                setTimeout(() => {
+                    content.classList.remove('scale-95', 'opacity-0');
+                    content.classList.add('scale-100', 'opacity-100');
+                }, 10);
+            } else {
+                content.classList.remove('scale-100', 'opacity-100');
+                content.classList.add('scale-95', 'opacity-0');
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                }, 150);
             }
         }
 

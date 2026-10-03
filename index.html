@@ -1,0 +1,1743 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sfida di Matematica - Allenamento INVALSI Classe V</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        heading: ['Fredoka', 'sans-serif'],
+                        body: ['Nunito', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                        },
+                        mathPink: '#ec4899',
+                        mathPurple: '#8b5cf6',
+                        mathYellow: '#f59e0b',
+                        mathGreen: '#10b981',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, #e0f2fe 0%, #f3e8ff 50%, #fce7f3 100%);
+            min-height: 100vh;
+        }
+
+        h1, h2, h3, h4, button, .font-heading {
+            font-family: 'Fredoka', sans-serif;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+        }
+
+        .btn-bounce:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        }
+
+        .btn-bounce:active {
+            transform: translateY(1px) scale(0.98);
+        }
+
+        /* Floating Balloons Effect */
+        .balloon-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            overflow: hidden;
+        }
+
+        .balloon {
+            position: absolute;
+            bottom: -100px;
+            width: 50px;
+            height: 65px;
+            border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+            animation: floatUp 4s ease-in forwards;
+        }
+
+        .balloon::after {
+            content: "";
+            position: absolute;
+            bottom: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 16px;
+            background-color: rgba(0,0,0,0.3);
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-120vh) rotate(20deg);
+                opacity: 0;
+            }
+        }
+
+        /* Print styles for certificate */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #certificateContainer, #certificateContainer * {
+                visibility: visible;
+            }
+            #certificateContainer {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+                box-shadow: none !important;
+                background: white !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body class="text-slate-800 antialiased flex flex-col justify-between">
+
+    <!-- Top Navigation Header -->
+    <header class="w-full bg-white/80 backdrop-filter backdrop-blur-md border-b border-slate-200 sticky top-0 z-40 px-4 py-3 shadow-sm no-print">
+        <div class="max-w-6xl mx-auto flex items-center justify-between">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="showScreen('homeScreen')">
+                <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-brand-500 to-mathPurple text-white flex items-center justify-center font-bold text-xl shadow-md">
+                    <i class="fa-solid fa-calculator"></i>
+                </div>
+                <div>
+                    <h1 class="font-heading font-bold text-lg md:text-xl text-slate-800 leading-none">MatematiCAMP</h1>
+                    <p class="text-xs text-slate-500 font-semibold">Allenamento INVALSI • Classe V Primaria</p>
+                </div>
+            </div>
+
+            <div class="flex items-center space-x-3">
+                <button id="soundToggleBtn" onclick="toggleSound()" class="p-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 transition" title="Attiva/Disattiva Audio">
+                    <i id="soundIcon" class="fa-solid fa-volume-high text-lg"></i>
+                </button>
+                <div class="bg-amber-100 border border-amber-300 px-3 py-1.5 rounded-xl flex items-center space-x-2">
+                    <i class="fa-solid fa-star text-amber-500 text-sm"></i>
+                    <span id="globalStars" class="font-bold text-amber-900 text-sm">0 / 5 Stranze</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-6xl w-full mx-auto p-4 md:p-6 flex-grow flex flex-col justify-center">
+
+        <!-- SCREEN 1: WELCOME / LANDING -->
+        <section id="welcomeScreen" class="w-full transition-all duration-300">
+            <div class="glass-card rounded-3xl p-6 md:p-10 text-center max-w-4xl mx-auto border-2 border-white shadow-2xl relative overflow-hidden">
+                <div class="absolute -top-10 -right-10 w-40 h-40 bg-pink-200/50 rounded-full blur-2xl pointer-events-none"></div>
+                <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-blue-200/50 rounded-full blur-2xl pointer-events-none"></div>
+
+                <div class="inline-flex items-center space-x-2 bg-gradient-to-r from-brand-500/10 to-mathPurple/10 text-brand-700 px-4 py-2 rounded-full text-sm font-bold mb-6 border border-brand-200">
+                    <i class="fa-solid fa-wand-magic-sparkles text-brand-500"></i>
+                    <span>Pronti per la sfida INVALSI?</span>
+                </div>
+
+                <h2 class="text-3xl md:text-5xl font-heading font-bold text-slate-900 mb-4 leading-tight">
+                    Diventa un Super Campione dei <span class="bg-gradient-to-r from-brand-500 via-mathPurple to-mathPink bg-clip-text text-transparent">Numeri!</span>
+                </h2>
+
+                <p class="text-base md:text-lg text-slate-600 max-w-2xl mx-auto mb-8 font-medium">
+                    "Mettiti alla prova! Rispondi ai quesiti, sblocca le 5 stanze e conquista il tuo attestato ufficiale di fine modulo!"
+                </p>
+
+                <!-- Character Banner -->
+                <div class="my-6 flex justify-center">
+                    <div class="relative bg-gradient-to-b from-sky-100 to-indigo-100 p-4 rounded-3xl border border-sky-200 max-w-md w-full shadow-inner flex flex-col items-center">
+                        <img src="Mate e Carl su sfondo trasparente.png" alt="Mate e Carlo" class="h-56 md:h-64 object-contain filter drop-shadow-lg transform hover:scale-105 transition duration-300" onerror="this.onerror=null; this.src='https://placehold.co/400x300/e0f2fe/0284c7?text=Mate+e+Carlo';">
+                        <div class="mt-3 bg-white/90 px-4 py-2 rounded-2xl shadow border border-slate-100 text-center">
+                            <span class="font-bold text-slate-800 text-sm">Mate & Carlo</span>
+                            <p class="text-xs text-slate-500">I tuoi personal trainer di matematica!</p>
+                        </div>
+                    </div>
+                </div>
+
+                <button onclick="showScreen('homeScreen')" class="btn-bounce bg-gradient-to-r from-brand-500 to-mathPurple hover:from-brand-600 hover:to-purple-700 text-white font-heading font-bold text-xl px-10 py-4 rounded-2xl shadow-lg transition-all duration-200 inline-flex items-center space-x-3 group">
+                    <span>INIZIA L'ALLENAMENTO</span>
+                    <i class="fa-solid fa-arrow-right text-2xl group-hover:translate-x-1 transition-transform"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- SCREEN 2: ROOM SELECT DASHBOARD (HOME) -->
+        <section id="homeScreen" class="w-full hidden transition-all duration-300">
+            <div class="mb-8 text-center md:text-left flex flex-col md:flex-row md:items-end justify-between gap-4">
+                <div>
+                    <span class="text-brand-600 font-bold uppercase tracking-wider text-xs">Mappa delle competenze</span>
+                    <h2 class="text-3xl font-heading font-bold text-slate-900">Le 5 Stanze della Matematica</h2>
+                    <p class="text-slate-600 text-sm md:text-base">Completa le stanze in sequenza per sbloccare l'Attestato Finale!</p>
+                </div>
+                <div class="bg-white px-4 py-2.5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-center space-x-3">
+                    <span class="text-sm font-semibold text-slate-600">Requisito superamento:</span>
+                    <span class="bg-emerald-100 text-emerald-800 font-bold px-2.5 py-1 rounded-lg text-xs border border-emerald-300">6 / 8 risposte esatte</span>
+                </div>
+            </div>
+
+            <!-- 6 Grid Cards -->
+            <div id="roomsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Cards injected dynamically via JavaScript -->
+            </div>
+        </section>
+
+        <!-- SCREEN 3: QUIZ ROOM -->
+        <section id="quizScreen" class="w-full hidden transition-all duration-300">
+            <div class="max-w-3xl mx-auto">
+                <!-- Quiz Header Card -->
+                <div class="glass-card rounded-2xl p-4 md:p-6 mb-6 border border-white shadow-lg">
+                    <div class="flex items-center justify-between mb-3">
+                        <button onclick="confirmExitQuiz()" class="text-slate-500 hover:text-slate-800 text-sm font-semibold flex items-center space-x-2 bg-slate-100 px-3 py-1.5 rounded-xl hover:bg-slate-200 transition">
+                            <i class="fa-solid fa-chevron-left text-xs"></i>
+                            <span>Esci dalla Stanza</span>
+                        </button>
+                        <div id="roomBadge" class="bg-brand-100 text-brand-800 font-bold text-xs px-3 py-1.5 rounded-xl border border-brand-200">
+                            Stanza 1
+                        </div>
+                    </div>
+
+                    <!-- Progress Bar -->
+                    <div class="space-y-1.5">
+                        <div class="flex justify-between text-xs font-bold text-slate-600">
+                            <span id="questionProgressText">Quesito 1 di 8</span>
+                            <span id="scoreText">Punteggio: 0/8</span>
+                        </div>
+                        <div class="w-full bg-slate-200 h-3 rounded-full overflow-hidden p-0.5 border border-slate-300/50">
+                            <div id="progressBar" class="bg-gradient-to-r from-brand-500 to-mathPurple h-full rounded-full transition-all duration-300 w-0"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Question Card -->
+                <div class="glass-card rounded-3xl p-6 md:p-8 border border-white shadow-xl relative">
+                    <div class="mb-6">
+                        <span id="questionCategory" class="text-xs font-bold uppercase tracking-wider text-mathPurple bg-purple-100 px-3 py-1 rounded-full border border-purple-200 inline-block mb-3">
+                            Invalsi Classe V
+                        </span>
+                        <h3 id="questionText" class="text-xl md:text-2xl font-heading font-bold text-slate-900 leading-snug">
+                            Testo della domanda...
+                        </h3>
+                    </div>
+
+                    <!-- Options Container -->
+                    <div id="optionsContainer" class="space-y-3">
+                        <!-- Options injected dynamically -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- EXPLANATION MODAL -->
+        <div id="explanationModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+            <div class="bg-white rounded-3xl max-w-lg w-full p-6 md:p-8 shadow-2xl border border-slate-100 transform transition-all scale-95 opacity-0 duration-200" id="explanationContent">
+                <div id="resultHeader" class="flex items-center space-x-3 mb-4 p-3 rounded-2xl">
+                    <div id="resultIcon" class="w-12 h-12 rounded-2xl flex items-center justify-center text-white text-2xl font-bold"></div>
+                    <div>
+                        <h4 id="resultTitle" class="font-heading font-bold text-xl">Risposta Corretta!</h4>
+                        <p id="resultSubtitle" class="text-xs text-slate-600">Ecco la spiegazione dettagliata del quesito:</p>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200 mb-6 text-slate-700 text-sm md:text-base leading-relaxed custom-scrollbar max-h-60 overflow-y-auto">
+                    <p id="explanationText">Spiegazione qui...</p>
+                </div>
+
+                <button onclick="nextQuestion()" class="w-full btn-bounce bg-gradient-to-r from-brand-500 to-mathPurple text-white font-heading font-bold py-3.5 px-6 rounded-2xl shadow-lg hover:from-brand-600 hover:to-purple-700 transition flex items-center justify-center space-x-2">
+                    <span>CONTINUA</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- SCREEN 4: CERTIFICATE SECTION -->
+        <section id="certificateScreen" class="w-full hidden transition-all duration-300">
+            <div class="mb-6 flex flex-col md:flex-row items-center justify-between gap-4 no-print">
+                <button onclick="showScreen('homeScreen')" class="text-slate-600 hover:text-slate-900 bg-white px-4 py-2 rounded-xl border border-slate-200 shadow-sm font-semibold text-sm flex items-center space-x-2">
+                    <i class="fa-solid fa-house"></i>
+                    <span>Torna alla Dashboard</span>
+                </button>
+                <div class="flex items-center space-x-3">
+                    <button onclick="window.print()" class="btn-bounce bg-gradient-to-r from-emerald-500 to-teal-600 text-white px-6 py-2.5 rounded-xl font-heading font-bold shadow-md flex items-center space-x-2">
+                        <i class="fa-solid fa-print"></i>
+                        <span>Stampa Attestato</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Name Input Field (Interactive) -->
+            <div class="bg-white rounded-2xl p-4 mb-6 border border-slate-200 shadow-sm max-w-md mx-auto text-center no-print">
+                <label for="studentNameInput" class="block text-xs font-bold text-slate-600 mb-2 uppercase tracking-wider">
+                    Personalizza l'Attestato col tuo Nome:
+                </label>
+                <input type="text" id="studentNameInput" placeholder="Inserisci il tuo nome e cognome" value="Campione di Matematica" oninput="updateCertificateName(this.value)" class="w-full text-center px-4 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-500 font-bold text-slate-800">
+            </div>
+
+            <!-- Printable Certificate Document -->
+            <div id="certificateContainer" class="max-w-4xl mx-auto bg-white rounded-3xl p-8 md:p-12 border-8 border-amber-300 shadow-2xl relative overflow-hidden text-center my-4">
+                <!-- Decorative Corner Badges -->
+                <div class="absolute top-4 left-4 w-16 h-16 border-t-4 border-l-4 border-amber-400 rounded-tl-2xl"></div>
+                <div class="absolute top-4 right-4 w-16 h-16 border-t-4 border-r-4 border-amber-400 rounded-tr-2xl"></div>
+                <div class="absolute bottom-4 left-4 w-16 h-16 border-b-4 border-l-4 border-amber-400 rounded-bl-2xl"></div>
+                <div class="absolute bottom-4 right-4 w-16 h-16 border-b-4 border-r-4 border-amber-400 rounded-br-2xl"></div>
+
+                <div class="flex justify-between items-center mb-6">
+                    <div class="text-left">
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-widest block">Repubblica della Matematica</span>
+                        <span class="text-xs font-bold text-amber-600 uppercase">Classe V Primaria</span>
+                    </div>
+                    <div class="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center border-2 border-amber-400 shadow-inner">
+                        <i class="fa-solid fa-award text-3xl text-amber-500"></i>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-widest block">Edizione INVALSI</span>
+                        <span class="text-xs font-bold text-emerald-600 uppercase">Modulo Superato</span>
+                    </div>
+                </div>
+
+                <h2 class="text-3xl md:text-5xl font-heading font-extrabold text-slate-800 tracking-wide uppercase mb-2">
+                    ATTESTATO DI MERITO
+                </h2>
+                <p class="text-amber-600 font-bold uppercase text-xs md:text-sm tracking-widest mb-6">
+                    ★ Eccellenza nelle Competenze di Numeracy ★
+                </p>
+
+                <p class="text-slate-600 text-sm md:text-base font-medium mb-2">Si attesta con orgoglio che l'alunno/a:</p>
+                <div id="certStudentName" class="text-2xl md:text-4xl font-heading font-extrabold text-brand-600 border-b-2 border-dashed border-brand-300 pb-2 inline-block px-8 my-2">
+                    Campione di Matematica
+                </div>
+
+                <p class="text-slate-700 text-sm md:text-base mt-4 max-w-2xl mx-auto leading-relaxed">
+                    ha completato con successo tutti e 5 i livelli di sfida e dimostrato il pieno possesso delle competenze per il modulo:
+                </p>
+
+                <div class="my-6 bg-amber-50 border-2 border-amber-200 rounded-2xl p-4 max-w-2xl mx-auto">
+                    <h3 class="font-heading font-bold text-lg md:text-xl text-amber-900">
+                        "Leggere, scrivere, confrontare numeri interi e decimali"
+                    </h3>
+                    <p class="text-xs text-amber-700 mt-1">
+                        Numeri entro 100.000, Milioni e Miliardi, Frazioni Decimali, Valore Posizionale, Scomposizione e Confronto.
+                    </p>
+                </div>
+
+                <!-- Footer with Characters -->
+                <div class="mt-8 pt-6 border-t border-slate-200 flex flex-col md:flex-row items-center justify-between gap-6">
+                    <div class="flex items-center space-x-3">
+                        <img src="Mate e Carl su sfondo trasparente.png" alt="Mate e Carlo" class="h-16 object-contain" onerror="this.onerror=null; this.src='https://placehold.co/100x100/e0f2fe/0284c7?text=Mate+Carlo';">
+                        <div class="text-left text-xs">
+                            <span class="font-bold text-slate-800 block">Mate e Carlo</span>
+                            <span class="text-slate-500">I tuoi Tutor Digitale</span>
+                        </div>
+                    </div>
+
+                    <div class="text-center md:text-right text-xs text-slate-500">
+                        <p id="certDate" class="font-semibold text-slate-700 mb-1">Data: --/--/----</p>
+                        <p class="italic">Verificato e Approvato dal Sistema MatematiCAMP</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full bg-white/60 border-t border-slate-200 py-3 px-4 text-center text-xs text-slate-500 no-print mt-8">
+        <p>© 2026 MatematiCAMP • Attività per la Scuola Primaria - Ispirato alle Prove INVALSI di Matematica</p>
+    </footer>
+
+    <!-- Balloon Animation Container -->
+    <div id="balloonContainer" class="balloon-container"></div>
+
+    <script>
+        // GLOBAL APP STATE
+        const appState = {
+            unlockedLevels: [true, false, false, false, false], // Room 0 to 4 unlocked state
+            levelScores: [0, 0, 0, 0, 0], // Best score per level
+            currentRoomIndex: 0,
+            currentQuestions: [],
+            currentQuestionIdx: 0,
+            roomScore: 0,
+            soundEnabled: true
+        };
+
+        // AUDIO SYNTHESIZER USING WEB AUDIO API (NO EXTERNAL FILES NEEDED)
+        const AudioEngine = {
+            ctx: null,
+            init() {
+                if (!this.ctx) {
+                    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+            },
+            playCorrect() {
+                if (!appState.soundEnabled) return;
+                this.init();
+                const now = this.ctx.currentTime;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(523.25, now); // C5
+                osc.frequency.setValueAtTime(659.25, now + 0.1); // E5
+                osc.frequency.setValueAtTime(783.99, now + 0.2); // G5
+                gain.gain.setValueAtTime(0.2, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start(now);
+                osc.stop(now + 0.4);
+            },
+            playWrong() {
+                if (!appState.soundEnabled) return;
+                this.init();
+                const now = this.ctx.currentTime;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(220, now); // A3
+                osc.frequency.setValueAtTime(196, now + 0.15); // G3
+                gain.gain.setValueAtTime(0.2, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start(now);
+                osc.stop(now + 0.35);
+            },
+            playVictory() {
+                if (!appState.soundEnabled) return;
+                this.init();
+                const notes = [523.25, 659.25, 783.99, 1046.50];
+                notes.forEach((freq, idx) => {
+                    const now = this.ctx.currentTime + idx * 0.12;
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(freq, now);
+                    gain.gain.setValueAtTime(0.25, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    osc.start(now);
+                    osc.stop(now + 0.3);
+                });
+            }
+        };
+
+        function toggleSound() {
+            appState.soundEnabled = !appState.soundEnabled;
+            const btn = document.getElementById('soundIcon');
+            if (appState.soundEnabled) {
+                btn.className = 'fa-solid fa-volume-high text-lg';
+            } else {
+                btn.className = 'fa-solid fa-volume-xmark text-lg text-rose-500';
+            }
+        }
+
+        // ROOM DATA DEFINITION
+        const roomsConfig = [
+            {
+                id: 0,
+                title: "Numeri entro 100.000",
+                desc: "Lettura e scrittura dei numeri interi e decimali fino a 100 000.",
+                icon: "fa-cubes",
+                color: "from-blue-500 to-cyan-500"
+            },
+            {
+                id: 1,
+                title: "Milioni e Miliardi",
+                desc: "I grandi numeri: centinaia di migliaia, il milione e il miliardo.",
+                icon: "fa-earth-americas",
+                color: "from-indigo-500 to-purple-500"
+            },
+            {
+                id: 2,
+                title: "Decimali e Frazioni",
+                desc: "Numeri decimali e frazionari entro i millesimi (d, c, m).",
+                icon: "fa-percent",
+                color: "from-pink-500 to-rose-500"
+            },
+            {
+                id: 3,
+                title: "Valore Posizionale",
+                desc: "Valore delle cifre di numeri interi e decimali (u, da, h, uk, d, c, m).",
+                icon: "fa-chart-pie",
+                color: "from-amber-500 to-orange-500"
+            },
+            {
+                id: 4,
+                title: "Composizione e Confronto",
+                desc: "Scomposizioni, composizioni e confronto con >, <, =.",
+                icon: "fa-scale-balanced",
+                color: "from-emerald-500 to-teal-500"
+            }
+        ];
+
+        const questionBank = {
+            0: [
+                {
+                    q: "Come si scrive in cifre il numero 'quarantacinquemilaottocentotrentadue'?",
+                    options: ["45 832", "405 832", "45 0832", "4 582"],
+                    correct: 0,
+                    exp: "Quarantacinquemila corrisponde a 45 migliaia (45 000) e ottocentotrentadue a 832. Unendo le parti si ottiene 45 832."
+                },
+                {
+                    q: "A quale numero corrisponde la scrittura: 7 tens di migliaia, 3 migliaia, 4 centinaia e 9 unità?",
+                    options: ["73 409", "73 490", "703 409", "73 049"],
+                    correct: 0,
+                    exp: "7 daK = 70 000, 3 uK = 3 000, 4 h = 400, 0 da = 0, 9 u = 9. Sommando otteniamo 73 409."
+                },
+                {
+                    q: "Qual è il successivo del numero 99 999?",
+                    options: ["100 000", "99 100", "100 001", "900 000"],
+                    correct: 0,
+                    exp: "Aggiungendo 1 a 99 999, si passa alla centinaia di migliaia successiva: 99 999 + 1 = 100 000."
+                },
+                {
+                    q: "Se al numero 34 500 togli 5 centinaia, quale numero ottieni?",
+                    options: ["34 000", "34 495", "30 000", "34 450"],
+                    correct: 0,
+                    exp: "5 centinaia valgono 500. Togliendo 500 da 34 500 si calcola 34 500 - 500 = 34 000."
+                },
+                {
+                    q: "Quale tra questi numeri ha la cifra 7 nella posizione delle decine di migliaia?",
+                    options: ["72 150", "27 150", "15 720", "7 215"],
+                    correct: 0,
+                    exp: "Nel numero 72 150 la cifra 7 si trova in quinta posizione da destra, cioè le decine di migliaia (7 daK)."
+                },
+                {
+                    q: "Come si legge il numero 80 005?",
+                    options: ["Ottantamilacinque", "Ottocentomilacinque", "Ottantamilacinquecento", "Ottomilacinque"],
+                    correct: 0,
+                    exp: "80 indica 'ottantamila', la classe delle unità semplici ha 0 centinaia, 0 decine e 5 unità: 'ottantamilacinque'."
+                },
+                {
+                    q: "Nel numero 63 219, qual è il valore della cifra 3?",
+                    options: ["3 000", "300", "30 000", "30"],
+                    correct: 0,
+                    exp: "La cifra 3 si trova nella posizione delle unità di migliaia (uK), quindi il suo valore posizionale è 3 x 1 000 = 3 000."
+                },
+                {
+                    q: "Quale numero manca nella sequenza: 20 000 - 25 000 - 30 000 - ... - 40 000?",
+                    options: ["35 000", "31 000", "32 500", "38 000"],
+                    correct: 0,
+                    exp: "La sequenza cresce di 5 000 alla volta. Quindi 30 000 + 5 000 = 35 000."
+                },
+                {
+                    q: "Qual è il precedente del numero 50 000?",
+                    options: ["49 999", "49 000", "49 990", "40 999"],
+                    correct: 0,
+                    exp: "Il precedente di un numero si trova togliendo 1: 50 000 - 1 = 49 999."
+                },
+                {
+                    q: "Quale numero è formato da 9 daK, 0 uK, 8 h, 2 da, 1 u?",
+                    options: ["90 821", "9 821", "98 021", "908 210"],
+                    correct: 0,
+                    exp: "9 daK (90 000) + 0 uK + 8 h (800) + 2 da (20) + 1 u (1) = 90 821."
+                },
+                {
+                    q: "A quanto corrispondono 100 centinaia?",
+                    options: ["10 000", "1 000", "100 000", "100"],
+                    correct: 0,
+                    exp: "Una centinaia è 100. Quindi 100 centinaia equivale a 100 x 100 = 10 000."
+                },
+                {
+                    q: "Se aggiungi 2 decine di migliaia al numero 15 300 ottieni:",
+                    options: ["35 300", "17 300", "25 300", "15 500"],
+                    correct: 0,
+                    exp: "2 decine di migliaia corrispondono a 20 000. 15 300 + 20 000 = 35 300."
+                },
+                {
+                    q: "Qual è il numero pari immediatamente successivo a 42 198?",
+                    options: ["42 200", "42 199", "42 202", "42 210"],
+                    correct: 0,
+                    exp: "Il successivo di 42 198 è 42 199 (dispari), il numero pari subito dopo è 42 200."
+                },
+                {
+                    q: "In quale dei seguenti numeri la cifra 5 ha valore 500?",
+                    options: ["12 530", "52 130", "15 230", "12 053"],
+                    correct: 0,
+                    exp: "Nel numero 12 530 la cifra 5 occupa il posto delle centinaia, quindi vale 5 x 100 = 500."
+                },
+                {
+                    q: "Qual è la metà del numero 60 000?",
+                    options: ["30 000", "3 000", "15 000", "300 000"],
+                    correct: 0,
+                    exp: "La metà di 60 è 30, quindi la metà di 60 mila è 30 mila (30 000)."
+                },
+                {
+                    q: "Qual è il doppio di 25 000?",
+                    options: ["50 000", "500 000", "250 000", "75 000"],
+                    correct: 0,
+                    exp: "Moltiplicando per 2: 25 000 x 2 = 50 000."
+                },
+                {
+                    q: "Scrivi in cifre: 'diciassettemilaquaranta'.",
+                    options: ["17 040", "17 400", "170 040", "1 740"],
+                    correct: 0,
+                    exp: "Diciassettemila = 17 000. Quaranta = 40. Mancano le centinaia (0). Quindi 17 040."
+                },
+                {
+                    q: "Quale somma dà come risultato 88 888?",
+                    options: ["80 000 + 8 000 + 800 + 80 + 8", "80 000 + 888", "8 000 + 888", "80 000 + 800 + 88"],
+                    correct: 0,
+                    exp: "La scomposizione additiva completa di 88 888 è 80 000 + 8 000 + 800 + 80 + 8."
+                },
+                {
+                    q: "Nel numero 94 302 quante decine semplici ci sono nella cifra delle decine?",
+                    options: ["0 decine", "3 decine", "4 decine", "2 decine"],
+                    correct: 0,
+                    exp: "La cifra al posto delle decine è 0."
+                },
+                {
+                    q: "Quanto vale 10 volte il numero 4 500?",
+                    options: ["45 000", "450 000", "4 500", "450"],
+                    correct: 0,
+                    exp: "Moltiplicando per 10 si aggiunge uno 0 a destra: 4 500 x 10 = 45 000."
+                },
+                {
+                    q: "Quale numero si trova esattamente a metà tra 10 000 e 20 000?",
+                    options: ["15 000", "12 500", "17 500", "14 000"],
+                    correct: 0,
+                    exp: "La differenza è 10 000. La metà della differenza è 5 000. 10 000 + 5 000 = 15 000."
+                },
+                {
+                    q: "Se la cifra delle centinaia di 62 480 viene aumentata di 3, quale numero ottieni?",
+                    options: ["62 780", "65 480", "62 483", "62 510"],
+                    correct: 0,
+                    exp: "La cifra delle centinaia è 4. Se la aumenti di 3 diventa 7, ottenendo 62 780."
+                },
+                {
+                    q: "In quale numero la cifra delle unità di migliaia è il doppio di quella delle centinaia?",
+                    options: ["14 200", "12 400", "14 800", "22 200"],
+                    correct: 0,
+                    exp: "In 14 200: la cifra delle unità di migliaia è 4 e quella delle centinaia è 2. Infatti 4 è il doppio di 2!"
+                },
+                {
+                    q: "Scomponi il numero 50 204.",
+                    options: ["5 daK + 2 h + 4 u", "5 uK + 2 da + 4 u", "5 daK + 2 da + 4 u", "50 uK + 204 u"],
+                    correct: 0,
+                    exp: "50 204 = 5 decine di migliaia (50 000) + 2 centinaia (200) + 4 unità (4)."
+                },
+                {
+                    q: "Quanto bisogna aggiungere a 92 000 per arrivare a 100 000?",
+                    options: ["8 000", "800", "18 000", "80 000"],
+                    correct: 0,
+                    exp: "Calcolando 100 000 - 92 000 = 8 000."
+                },
+                {
+                    q: "Qual è la scrittura corretta di 3 daK e 15 uK?",
+                    options: ["45 000", "31 500", "35 000", "15 300"],
+                    correct: 0,
+                    exp: "3 daK = 30 000; 15 uK = 15 000. Sommandole: 30 000 + 15 000 = 45 000."
+                },
+                {
+                    q: "Se dividi 70 000 per 10, ottieni:",
+                    options: ["7 000", "700", "70", "70 000"],
+                    correct: 0,
+                    exp: "Dividendo per 10 si toglie uno zero finale: 70 000 : 10 = 7 000."
+                },
+                {
+                    q: "Nel numero 81 923, quale cifra rappresenta le decine di migliaia?",
+                    options: ["8", "1", "9", "2"],
+                    correct: 0,
+                    exp: "La cifra 8 è in quinta posizione (daK), quindi rappresenta le decine di migliaia."
+                },
+                {
+                    q: "Quale tra i seguenti numeri è il più grande?",
+                    options: ["99 899", "99 989", "98 999", "99 890"],
+                    correct: 0,
+                    exp: "Confrontando da sinistra a destra, 99 989 ha 9 centinaia, superando 99 899 (8 centinaia)."
+                },
+                {
+                    q: "Come si scrive trecentocinque euro in forma numerica intera di centesimi?",
+                    options: ["30 500 centesimi", "3 050 centesimi", "305 centesimi", "305 000 centesimi"],
+                    correct: 0,
+                    exp: "Poiché 1 euro = 100 centesimi, 305 euro = 305 x 100 = 30 500 centesimi."
+                }
+            ],
+
+            1: [
+                {
+                    q: "Come si scrive in cifre 'due milioni trecentomila'?",
+                    options: ["2 300 000", "23 000 000", "203 000", "2 000 300"],
+                    correct: 0,
+                    exp: "2 milioni = 2 000 000, trecentomila = 300 000. Insieme formano 2 300 000."
+                },
+                {
+                    q: "A quanti milioni corrisponde 1 miliardo?",
+                    options: ["1 000 milioni", "100 milioni", "10 milioni", "10 000 milioni"],
+                    correct: 0,
+                    exp: "1 miliardo è formato da 1 000 milioni (1 000 000 000)."
+                },
+                {
+                    q: "Quale cifra occupa il posto delle centinaia di migliaia nel numero 5 482 109?",
+                    options: ["4", "8", "5", "2"],
+                    correct: 0,
+                    exp: "In 5 482 109, la cifra 4 occupa il posto delle centinaia di migliaia (hk)."
+                },
+                {
+                    q: "Come si legge il numero 1 000 000 000?",
+                    options: ["Un miliardo", "Un milione", "Cento milioni", "Dieci miliardi"],
+                    correct: 0,
+                    exp: "1 seguito da 9 zeri rappresenta esattamente 1 miliardo."
+                },
+                {
+                    q: "Qual è il valore posizionale della cifra 7 nel numero 17 400 000?",
+                    options: ["7 milioni", "700 mila", "70 milioni", "7 mila"],
+                    correct: 0,
+                    exp: "La cifra 7 si trova nella posizione delle unità di milione (uM), quindi vale 7 000 000."
+                },
+                {
+                    q: "Se aggiungi 1 milione a 999 000, ottieni:",
+                    options: ["1 999 000", "1 000 000", "10 999 000", "999 001"],
+                    correct: 0,
+                    exp: "999 000 + 1 000 000 = 1 999 000."
+                },
+                {
+                    q: "Quanti zeri ci sono nel numero 'cinque milioni'?",
+                    options: ["6 zeri", "5 zeri", "9 zeri", "7 zeri"],
+                    correct: 0,
+                    exp: "5 milioni si scrive 5 000 000, contenendo esattamente 6 zeri."
+                },
+                {
+                    q: "Qual è il successivo del numero 9 999 999?",
+                    options: ["10 000 000", "100 000 000", "1 000 000", "9 999 1000"],
+                    correct: 0,
+                    exp: "Aggiungendo 1 a 9 999 999 si ottiene dieci milioni (10 000 000)."
+                },
+                {
+                    q: "In 4 500 000 000, cosa rappresenta la cifra 4?",
+                    options: ["4 unità di miliardo", "4 centinaia di milione", "4 decine di miliardo", "4 milioni"],
+                    correct: 0,
+                    exp: "La cifra 4 è nella classe dei miliardi, alla posizione delle unità di miliardo (uG)."
+                },
+                {
+                    q: "Scomponi il numero 3 050 000.",
+                    options: ["3 uM + 5 daK", "3 uM + 5 uK", "30 uM + 5 hK", "3 G + 50 M"],
+                    correct: 0,
+                    exp: "3 uM = 3 000 000 e 5 daK = 50 000. Insieme danno 3 050 000."
+                },
+                {
+                    q: "A quanto equivalgono 10 centinaia di migliaia (10 hK)?",
+                    options: ["1 milione", "100 mila", "10 milioni", "1 miliardo"],
+                    correct: 0,
+                    exp: "1 hK = 100 000. Quindi 10 hK = 10 x 100 000 = 1 000 000 (1 milione)."
+                },
+                {
+                    q: "Come si scrive 'quindici milioni quarantamila'?",
+                    options: ["15 040 000", "15 400 000", "150 040 000", "1 540 000"],
+                    correct: 0,
+                    exp: "15 milioni (15) nella classe dei milioni, 040 nella classe delle migliaia, 000 nelle unità."
+                },
+                {
+                    q: "Quale tra questi numeri è esattamente la metà di 2 miliardi?",
+                    options: ["1 miliardo", "100 milioni", "500 milioni", "200 milioni"],
+                    correct: 0,
+                    exp: "La metà di 2 è 1, quindi la metà di 2 miliardi è 1 miliardo."
+                },
+                {
+                    q: "Se dividi 500 000 000 (500 milioni) per 10, cosa ottieni?",
+                    options: ["50 milioni", "5 milioni", "500 mila", "5 miliardi"],
+                    correct: 0,
+                    exp: "500 000 000 : 10 = 50 000 000 (50 milioni)."
+                },
+                {
+                    q: "Nel numero 82 500 000, quante decine di milioni ci sono?",
+                    options: ["8 decine di milioni", "2 decine di milioni", "5 decine di milioni", "82 decine di milioni"],
+                    correct: 0,
+                    exp: "La cifra 8 si trova nel posto delle decine di milioni (daM)."
+                },
+                {
+                    q: "Quale di queste quantità indica 2,5 milioni?",
+                    options: ["2 500 000", "250 000", "25 000 000", "2 000 500"],
+                    correct: 0,
+                    exp: "2,5 milioni significa 2 milioni e mezzo, cioè 2 500 000."
+                },
+                {
+                    q: "Qual è il precedente del numero 1 000 000?",
+                    options: ["999 999", "990 000", "900 000", "999 000"],
+                    correct: 0,
+                    exp: "Togliendo 1 a 1 milione si ottiene 999 999."
+                },
+                {
+                    q: "Quante cifre ha un numero dell'ordine delle decine di miliardi?",
+                    options: ["11 cifre", "9 cifre", "10 cifre", "12 cifre"],
+                    correct: 0,
+                    exp: "Le decine di miliardi (es. 10 000 000 000) sono formate da 11 cifre."
+                },
+                {
+                    q: "Come si compone 4 hM + 2 daM + 9 uM?",
+                    options: ["429 000 000", "42 900 000", "4 290 000", "429 000"],
+                    correct: 0,
+                    exp: "4 centinaia di milioni + 2 decine di milioni + 9 unità di milioni = 429 000 000."
+                },
+                {
+                    q: "Quale numero manca: 100 M - 200 M - 300 M - ... - 500 M?",
+                    options: ["400 M (400 000 000)", "350 M", "450 M", "40 M"],
+                    correct: 0,
+                    exp: "La sequenza va di 100 milioni in 100 milioni, quindi manca 400 M."
+                },
+                {
+                    q: "Il numero 6 000 000 000 corrisponde a:",
+                    options: ["6 miliardi", "60 milioni", "600 milioni", "60 miliardi"],
+                    correct: 0,
+                    exp: "6 seguito da 9 zeri si legge 6 miliardi."
+                },
+                {
+                    q: "Quanto fa 1 000 x 1 000?",
+                    options: ["1 000 000", "100 000", "10 000 000", "10 000"],
+                    correct: 0,
+                    exp: "1 000 x 1 000 = 1 000 000 (un milione)."
+                },
+                {
+                    q: "In quale numero la cifra 9 vale 90 000 000?",
+                    options: ["94 200 000", "9 420 000", "492 000 000", "9 000 420"],
+                    correct: 0,
+                    exp: "Nel numero 94 200 000 la cifra 9 è nelle decine di milioni, quindi vale 90 000 000."
+                },
+                {
+                    q: "Aggiungendo 500 000 a 3 500 000 si ottiene:",
+                    options: ["4 000 000", "3 600 000", "4 500 000", "30 000 000"],
+                    correct: 0,
+                    exp: "3,5 milioni + 0,5 milioni = 4 milioni (4 000 000)."
+                },
+                {
+                    q: "Qual è la scrittura corretta di 7 miliardi in notazione scientifica/compatta?",
+                    options: ["7 x 1 000 000 000", "7 x 1 000 000", "7 x 100 000", "7 x 10 000 000"],
+                    correct: 0,
+                    exp: "1 miliardo è 1 000 000 000, quindi 7 x 1 000 000 000."
+                },
+                {
+                    q: "Come si scrive 'tre miliardi e mezzo' in cifre?",
+                    options: ["3 500 000 000", "3 005 000 000", "350 000 000", "3 000 000 500"],
+                    correct: 0,
+                    exp: "3 miliardi e mezzo corrisponde a 3 miliardi e 500 milioni (3 500 000 000)."
+                },
+                {
+                    q: "Se sottrai 1 milione da 1 miliardo, qual è il risultato?",
+                    options: ["999 000 000", "99 000 000", "900 000 000", "999 999 000"],
+                    correct: 0,
+                    exp: "1 000 000 000 - 1 000 000 = 999 000 000 (999 milioni)."
+                },
+                {
+                    q: "Quale dei seguenti numeri ha più cifre?",
+                    options: ["Un miliardo", "Cento milioni", "Dieci milioni", "Novecentosessantamila"],
+                    correct: 0,
+                    exp: "Un miliardo ha 10 cifre, mentre cento milioni ne ha 9."
+                },
+                {
+                    q: "A quanti gruppi di 100 000 corrisponde 1 milione?",
+                    options: ["10 gruppi", "100 gruppi", "1 000 gruppi", "5 gruppi"],
+                    correct: 0,
+                    exp: "10 x 100 000 = 1 000 000, quindi servono 10 gruppi da centomila."
+                },
+                {
+                    q: "Nel numero 12 345 678 901, qual è la cifra delle centinaia di miliardi?",
+                    options: ["0 (non presente, è 0)", "1", "2", "3"],
+                    correct: 0,
+                    exp: "Il numero ha 11 cifre, arrivando alle decine di miliardi (1). La cifra delle centinaia di miliardi è 0."
+                }
+            ],
+
+            2: [
+                {
+                    q: "Come si scrive in cifra decimale la frazione 3/10?",
+                    options: ["0,3", "0,03", "3,0", "0,003"],
+                    correct: 0,
+                    exp: "La frazione 3/10 equivale a 3 decimi, cioè 0,3."
+                },
+                {
+                    q: "A quale frazione decimale corrisponde il numero 0,025?",
+                    options: ["25/1000", "25/100", "25/10", "2,5/1000"],
+                    correct: 0,
+                    exp: "0,025 ha 3 cifre dopo la virgola (millesimi), quindi equivale a 25/1000."
+                },
+                {
+                    q: "Come si legge il numero decimale 4,108?",
+                    options: ["Quattro unità e centotto millesimi", "Quattro unità e dieci ottimi", "Quarantuno e otto centesimi", "Quattro virgola cento otto centesimi"],
+                    correct: 0,
+                    exp: "4 è la parte intera; .108 ha 3 cifre decimali, ovvero 108 millesimi."
+                },
+                {
+                    q: "Quale dei seguenti numeri è equivalente a 7/100?",
+                    options: ["0,07", "0,7", "0,007", "7,00"],
+                    correct: 0,
+                    exp: "7 diviso 100 fa 0,07 (sette centesimi)."
+                },
+                {
+                    q: "In 12,456 la cifra 6 rappresenta:",
+                    options: ["6 millesimi (m)", "6 centesimi (c)", "6 decimi (d)", "6 unità (u)"],
+                    correct: 0,
+                    exp: "La terza cifra dopo la virgola è quella dei millesimi: 6 millesimi."
+                },
+                {
+                    q: "A quanto equivale 15/10?",
+                    options: ["1,5", "0,15", "15,0", "0,015"],
+                    correct: 0,
+                    exp: "15 diviso 10 equivale a 1 unità e 5 decimi, ovvero 1,5."
+                },
+                {
+                    q: "Se aggiungi 1 centesimo (0,01) a 0,99 ottieni:",
+                    options: ["1", "0,100", "1,01", "0,991"],
+                    correct: 0,
+                    exp: "0,99 + 0,01 = 1,00 ovvero 1 unità intera."
+                },
+                {
+                    q: "Quale numero si trova tra 0,4 e 0,5?",
+                    options: ["0,45", "0,55", "0,39", "0,045"],
+                    correct: 0,
+                    exp: "0,4 equivale a 0,40 e 0,5 equivale a 0,50. Tra 0,40 e 0,50 c'è 0,45."
+                },
+                {
+                    q: "Cosa si ottiene moltiplicando 3,4 per 10?",
+                    options: ["34", "340", "0,34", "3,40"],
+                    correct: 0,
+                    exp: "Moltiplicando un decimale per 10, la virgola si sposta di un posto a destra: 3,4 x 10 = 34."
+                },
+                {
+                    q: "Cosa si ottiene dividendo 52 per 100?",
+                    options: ["0,52", "5,2", "0,052", "520"],
+                    correct: 0,
+                    exp: "Dividendo per 100 la virgola si sposta di due posti a sinistra: 52 : 100 = 0,52."
+                },
+                {
+                    q: "A quanti millesimi corrisponde 1 decimo?",
+                    options: ["100 millesimi", "10 millesimi", "1000 millesimi", "1 millesimo"],
+                    correct: 0,
+                    exp: "1 d = 10 c = 100 m. Quindi 1 decimo vale 100 millesimi."
+                },
+                {
+                    q: "Qual è la frazione decimale di 0,8?",
+                    options: ["8/10", "8/100", "8/1000", "80/10"],
+                    correct: 0,
+                    exp: "Una cifra dopo la virgola indica i decimi: 0,8 = 8/10."
+                },
+                {
+                    q: "Trasforma in numero decimale: 250/1000.",
+                    options: ["0,25", "2,5", "0,025", "25,0"],
+                    correct: 0,
+                    exp: "250/1000 = 0,250 che si può scrivere semplicemente 0,25."
+                },
+                {
+                    q: "Qual è il risultato di 0,5 + 0,5?",
+                    options: ["1", "0,10", "0,25", "10"],
+                    correct: 0,
+                    exp: "5 decimi + 5 decimi = 10 decimi = 1 unità intera."
+                },
+                {
+                    q: "Quale frazione equivale al numero 1,25?",
+                    options: ["125/100", "125/10", "125/1000", "12,5/100"],
+                    correct: 0,
+                    exp: "1,25 ha 2 cifre decimali, perciò al denominatore va 100: 125/100."
+                },
+                {
+                    q: "In 0,009 la cifra 9 indica:",
+                    options: ["9 millesimi", "9 centesimi", "9 decimi", "9 unità"],
+                    correct: 0,
+                    exp: "È la terza cifra a destra della virgola, dunque indica 9 millesimi."
+                },
+                {
+                    q: "Quale numero è pari a 5 unità e 3 millesimi?",
+                    options: ["5,003", "5,3", "5,03", "53,000"],
+                    correct: 0,
+                    exp: "5 unità = 5; 0 decimi, 0 centesimi, 3 millesimi = 5,003."
+                },
+                {
+                    q: "Se togli 1 decimo a 1,0 ottieni:",
+                    options: ["0,9", "0,99", "0,1", "0,09"],
+                    correct: 0,
+                    exp: "1,0 - 0,1 = 0,9 (nove decimi)."
+                },
+                {
+                    q: "Come si scrive 'otto centesimi' in cifre?",
+                    options: ["0,08", "0,8", "0,008", "8,00"],
+                    correct: 0,
+                    exp: "I centesimi occupano il secondo posto dopo la virgola: 0,08."
+                },
+                {
+                    q: "A quanto equivale 12 x 0,1?",
+                    options: ["1,2", "12,1", "0,12", "120"],
+                    correct: 0,
+                    exp: "Moltiplicare per 0,1 equivale a dividere per 10: 12 : 10 = 1,2."
+                },
+                {
+                    q: "Qual è la metà di 0,5?",
+                    options: ["0,25", "0,10", "0,20", "0,05"],
+                    correct: 0,
+                    exp: "0,5 = 0,50. La metà di 50 centesimi è 25 centesimi, cioè 0,25."
+                },
+                {
+                    q: "Completa l'uguaglianza: 4/10 = .../100.",
+                    options: ["40", "4", "400", "0,4"],
+                    correct: 0,
+                    exp: "Moltiplicando numeratore e denominatore per 10 si ottiene 40/100."
+                },
+                {
+                    q: "Qual è il doppio di 0,15?",
+                    options: ["0,30", "0,300", "0,03", "3,0"],
+                    correct: 0,
+                    exp: "0,15 x 2 = 0,30 (o 0,3)."
+                },
+                {
+                    q: "Quanti centesimi ci sono in 2 unità?",
+                    options: ["200 centesimi", "20 centesimi", "2000 centesimi", "2 centesimi"],
+                    correct: 0,
+                    exp: "Ogni unità contiene 100 centesimi. Quindi 2 unità = 200 centesimi."
+                },
+                {
+                    q: "Se calcoli 0,004 x 1000 ottieni:",
+                    options: ["4", "40", "0,4", "400"],
+                    correct: 0,
+                    exp: "Moltiplicando per 1000 la virgola si sposta di 3 posti verso destra: 0,004 x 1000 = 4."
+                },
+                {
+                    q: "Scrivi 3/1000 sotto forma di decimale:",
+                    options: ["0,003", "0,03", "0,3", "3,000"],
+                    correct: 0,
+                    exp: "Tre millesimi ha il 3 al terzo posto decimali: 0,003."
+                },
+                {
+                    q: "Tra quali interi è compreso il numero 6,78?",
+                    options: ["Tra 6 e 7", "Tra 5 e 6", "Tra 7 e 8", "Tra 67 e 68"],
+                    correct: 0,
+                    exp: "6,78 è maggiore di 6 unità e minore di 7 unità."
+                },
+                {
+                    q: "Scomponi 0,432:",
+                    options: ["4d + 3c + 2m", "4u + 3d + 2c", "4c + 3d + 2m", "43d + 2m"],
+                    correct: 0,
+                    exp: "4 decimi (0,4) + 3 centesimi (0,03) + 2 millesimi (0,002)."
+                },
+                {
+                    q: "Quale di questi decimali corrisponde alla frazione 1/2?",
+                    options: ["0,5", "0,2", "0,12", "0,05"],
+                    correct: 0,
+                    exp: "1 diviso 2 è pari a 0,5 (un mezzo)."
+                },
+                {
+                    q: "A quanto equivale 0,1 + 0,01 + 0,001?",
+                    options: ["0,111", "0,3", "0,003", "1,11"],
+                    correct: 0,
+                    exp: "Sommando in colonna: 1 decimo + 1 centesimo + 1 millesimo = 0,111."
+                }
+            ],
+
+            3: [
+                {
+                    q: "Nel numero 54 321,123 la cifra 3 ricorre due volte. Quali valori posizionali ha?",
+                    options: ["Centinaia (300) e millesimi (0,003)", "Migliaia (3000) e centesimi (0,03)", "Decine (30) e decimi (0,3)", "Centinaia (300) e centesimi (0,03)"],
+                    correct: 0,
+                    exp: "Il primo 3 si trova alle centinaia intere (300). Il secondo 3 al terzo posto decimale (millesimi = 0,003)."
+                },
+                {
+                    q: "Qual è la cifra delle decine nel numero 894 120,5?",
+                    options: ["2", "1", "0", "5"],
+                    correct: 0,
+                    exp: "La posizione delle decine (da) è la seconda cifra a sinistra della virgola, ovvero 2."
+                },
+                {
+                    q: "Se la cifra dei decimi in 14,35 viene scambiata con quella delle unità, che numero ottieni?",
+                    options: ["13,45", "15,34", "14,53", "34,15"],
+                    correct: 0,
+                    exp: "La cifra delle unità è 4, quella dei decimi è 3. Scambiandole si ottiene 13,45."
+                },
+                {
+                    q: "Nel numero 67,89 quale cifra indica i centesimi?",
+                    options: ["9", "8", "7", "6"],
+                    correct: 0,
+                    exp: "La seconda cifra dopo la virgola è quella dei centesimi (c), cioè 9."
+                },
+                {
+                    q: "Quanto vale la cifra 5 nel numero 0,052?",
+                    options: ["5 centesimi (0,05)", "5 decimi (0,5)", "5 millesimi (0,005)", "5 unità (5)"],
+                    correct: 0,
+                    exp: "La cifra 5 si trova in seconda posizione decimale, vale a dire 5 centesimi."
+                },
+                {
+                    q: "In quale numero la cifra 8 ha il valore posizionale maggiore?",
+                    options: ["81 200", "8 900", "18 500", "850"],
+                    correct: 0,
+                    exp: "In 81 200 la cifra 8 vale 80 000 (decine di migliaia), che è il valore più alto rispetto alle altre opzioni."
+                },
+                {
+                    q: "Nel numero 4 509,01 qual è la cifra delle decine semplici?",
+                    options: ["0", "5", "9", "1"],
+                    correct: 0,
+                    exp: "Le decine (da) si trovano prima delle unità. In 4 509 le decine sono 0."
+                },
+                {
+                    q: "Qual è il valore della cifra 1 in 100 000 000?",
+                    options: ["1 centinaio di milioni", "1 decina di milioni", "1 miliardo", "1 milione"],
+                    correct: 0,
+                    exp: "La cifra 1 si trova al posto delle centinaia di milioni (hM)."
+                },
+                {
+                    q: "Se sostituisci la cifra delle centinaia di 3 482 con uno 0, ottieni:",
+                    options: ["3 082", "3 402", "3 480", "0 482"],
+                    correct: 0,
+                    exp: "La cifra delle centinaia è 4. Sostituendola con 0 otteniamo 3 082."
+                },
+                {
+                    q: "Nel numero 0,471 quale cifra è nella posizione dei decimi?",
+                    options: ["4", "7", "1", "0"],
+                    correct: 0,
+                    exp: "I decimi sono la prima cifra subito dopo la virgola, cioè 4."
+                },
+                {
+                    q: "Che valore ha lo 0 nel numero 50 412?",
+                    options: ["0 unità di migliaia", "0 decine", "0 centinaia", "Non ha valore"],
+                    correct: 0,
+                    exp: "Lo 0 occupa la posizione delle unità di migliaia (uK)."
+                },
+                {
+                    q: "In 12,008 la cifra 8 rappresenta:",
+                    options: ["8 millesimi", "8 centesimi", "8 decimi", "8 decine"],
+                    correct: 0,
+                    exp: "Essendo la terza cifra decimale, rappresenta 8 millesimi (0,008)."
+                },
+                {
+                    q: "Quale cifra ha il valore di 7 000 nel numero 47 215?",
+                    options: ["7", "4", "2", "1"],
+                    correct: 0,
+                    exp: "La cifra 7 occupa la posizione delle unità di migliaia (uK), quindi vale 7 x 1 000 = 7 000."
+                },
+                {
+                    q: "Nel numero 987,654 qual è la cifra con il valore posizionale più piccolo?",
+                    options: ["4 (millesimi)", "9 (centinaia)", "5 (centesimi)", "7 (unità)"],
+                    correct: 0,
+                    exp: "I millesimi (4) rappresentano la posizione di valore più piccolo (4/1000 = 0,004)."
+                },
+                {
+                    q: "Qual è la cifra delle centinaia di migliaia in 3 654 210?",
+                    options: ["6", "5", "3", "4"],
+                    correct: 0,
+                    exp: "La sesta cifra da destra (o prima della classe dei milioni) è 6 (6 hK)."
+                },
+                {
+                    q: "Se nel numero 2,46 aumenti di 3 la cifra dei centesimi, ottieni:",
+                    options: ["2,49", "2,76", "5,46", "2,463"],
+                    correct: 0,
+                    exp: "La cifra dei centesimi è 6. Aumentandola di 3 diventa 9 -> 2,49."
+                },
+                {
+                    q: "Nel numero 15 000 000 la cifra 5 è nella posizione delle:",
+                    options: ["Unità di milione", "Decine di milione", "Centinaia di migliaia", "Miliardi"],
+                    correct: 0,
+                    exp: "La cifra 5 indica 5 unità di milione (uM)."
+                },
+                {
+                    q: "Quale tra le seguenti affermazioni su 0,300 è CORRETTA?",
+                    options: ["Lo 0 nei millesimi non cambia il valore del numero", "È 10 volte più grande di 0,3", "È più piccolo di 0,3", "Rappresenta 30 unità"],
+                    correct: 0,
+                    exp: "Gli zeri finali dopo la virgola sono 'zeri non significativi': 0,300 = 0,3."
+                },
+                {
+                    q: "Quante decine ci sono complessivamente in 500 unità?",
+                    options: ["50 decine", "5 decine", "500 decine", "5000 decine"],
+                    correct: 0,
+                    exp: "Poiché 1 decina = 10 unità, 500 : 10 = 50 decine."
+                },
+                {
+                    q: "Qual è la cifra dei decimi nel numero 10,05?",
+                    options: ["0", "5", "1", "Nessuna"],
+                    correct: 0,
+                    exp: "La prima cifra a destra della virgola è 0 decimi."
+                },
+                {
+                    q: "Nel numero 73 104, qual è la somma delle cifre delle decine e delle centinaia?",
+                    options: ["1 (1+0)", "4", "3", "7"],
+                    correct: 0,
+                    exp: "Centinaia = 1, Decine = 0. La somma è 1 + 0 = 1."
+                },
+                {
+                    q: "Se la cifra delle decine di migliaia in 84 210 diminuisce di 2, si ottiene:",
+                    options: ["64 210", "82 210", "84 010", "84 208"],
+                    correct: 0,
+                    exp: "La cifra delle decine di migliaia è 8. Diminuendola di 2 diventa 6: 64 210."
+                },
+                {
+                    q: "A quale posizione corrisponde la quinta cifra a destra della virgola?",
+                    options: ["Centomillesimi", "Millesimi", "Diecimillesimi", "Milionesimi"],
+                    correct: 0,
+                    exp: "1° decimi, 2° centesimi, 3° millesimi, 4° diecimillesimi, 5° centomillesimi."
+                },
+                {
+                    q: "In 0,1234 quale cifra vale 3 millesimi?",
+                    options: ["3", "1", "2", "4"],
+                    correct: 0,
+                    exp: "La cifra 3 è la terza dopo la virgola, quindi vale 3/1000 = 0,003."
+                },
+                {
+                    q: "Quale cifra ha il valore più alto nel numero 19 876?",
+                    options: ["1 (vale 10 000)", "9 (vale 9 000)", "8 (vale 800)", "6 (vale 6)"],
+                    correct: 0,
+                    exp: "Anche se 9 è più grande come cifra, la posizione di 1 è la decina di migliaia (10 000)."
+                },
+                {
+                    q: "Nel numero 25,671 la cifra 7 indica:",
+                    options: ["7 centesimi", "7 decimi", "7 millesimi", "7 unità"],
+                    correct: 0,
+                    exp: "La cifra 7 è al secondo posto dopo la virgola: 7 centesimi."
+                },
+                {
+                    q: "Quante centinaia ci sono in 10 000?",
+                    options: ["100 centinaia", "10 centinaia", "1 000 centinaia", "1 centinaio"],
+                    correct: 0,
+                    exp: "10 000 diviso 100 = 100 centinaia."
+                },
+                {
+                    q: "Nel numero 5 000 000 000 la cifra 5 è nella classe dei:",
+                    options: ["Miliardi", "Milioni", "Migliaia", "Unità semplici"],
+                    correct: 0,
+                    exp: "9 zeri dopo il 5 indicano la classe dei Miliardi."
+                },
+                {
+                    q: "Se un numero decimale ha 0 alle unità e 4 ai millesimi, come può essere scritto?",
+                    options: ["0,004", "0,4", "0,04", "4,000"],
+                    correct: 0,
+                    exp: "0 alle unità, 0 decimi, 0 centesimi, 4 millesimi = 0,004."
+                },
+                {
+                    q: "In quale numero la cifra 2 vale 2/100?",
+                    options: ["5,124", "2,514", "5,214", "5,412"],
+                    correct: 0,
+                    exp: "2/100 significa due centesimi (seconda cifra dopo la virgola): 5,124."
+                }
+            ],
+
+            4: [
+                {
+                    q: "Quale segno va inserito tra 45,20 e 45,2?",
+                    options: ["=", ">", "<", "≈"],
+                    correct: 0,
+                    exp: "45,20 e 45,2 sono uguali (=) perché lo zero finale dei decimali non altera il valore."
+                },
+                {
+                    q: "Metti in ordine crescente (dal più piccolo al più grande): 0,3 - 0,03 - 0,33.",
+                    options: ["0,03 < 0,3 < 0,33", "0,3 < 0,03 < 0,33", "0,33 < 0,3 < 0,03", "0,03 < 0,33 < 0,3"],
+                    correct: 0,
+                    exp: "0,03 (3 centesimi) < 0,30 (30 centesimi) < 0,33 (33 centesimi)."
+                },
+                {
+                    q: "Quale tra le seguenti relazioni è CORRETTA?",
+                    options: ["12,4 > 12,399", "12,4 < 12,399", "12,4 = 12,399", "12,04 > 12,4"],
+                    correct: 0,
+                    exp: " Confrontando i decimi: 12,4 ha 4 decimi (12,400), mentre 12,399 ha 3 decimi. Quindi 12,4 > 12,399."
+                },
+                {
+                    q: "Componi il seguente numero: 4 uK + 5 h + 2 d + 8 m.",
+                    options: ["4 500,208", "4 520,008", "4 502,8", "45 002,8"],
+                    correct: 0,
+                    exp: "4 uK = 4 000, 5 h = 500, 0 da, 0 u, 2 d = 0,2, 0 c, 8 m = 0,008 -> 4 500,208."
+                },
+                {
+                    q: "A quale numero corrisponde la somma: 300 000 + 40 000 + 500 + 2?",
+                    options: ["340 502", "345 002", "304 502", "340 052"],
+                    correct: 0,
+                    exp: "300 000 + 40 000 + 500 + 2 = 340 502."
+                },
+                {
+                    q: "Quale segno rende vera la disuguaglianza: 10 005 ... 10 050?",
+                    options: ["<", ">", "=", "+"],
+                    correct: 0,
+                    exp: "10 005 ha 0 decine, mentre 10 050 ne ha 5. Perciò 10 005 < 10 050."
+                },
+                {
+                    q: "Scomponi correttamente il numero 80,045:",
+                    options: ["8 da + 4 c + 5 m", "8 u + 4 d + 5 c", "80 u + 45 d", "8 da + 4 d + 5 m"],
+                    correct: 0,
+                    exp: "8 decine (80) + 0 unità + 0 decimi + 4 centesimi (0,04) + 5 millesimi (0,005)."
+                },
+                {
+                    q: "Quale tra i seguenti numeri decimali è il MAGGIORE?",
+                    options: ["0,801", "0,8", "0,799", "0,089"],
+                    correct: 0,
+                    exp: "0,801 ha 8 decimi e 1 millesimo, risultando maggiore di 0,800 e 0,799."
+                },
+                {
+                    q: "Quale tra i seguenti numeri decimali è il MINORE?",
+                    options: ["0,005", "0,05", "0,5", "5,0"],
+                    correct: 0,
+                    exp: "0,005 (5 millesimi) è il più piccolo rispetto a centesimi, decimi e unità."
+                },
+                {
+                    q: "Quale numero è maggiore di 1,5 ma minore di 1,6?",
+                    options: ["1,57", "1,62", "1,49", "1,50"],
+                    correct: 0,
+                    exp: "1,57 si trova tra 1,50 e 1,60."
+                },
+                {
+                    q: "Scomponi additivamente il numero 2 000 000 + 50 000 + 300.",
+                    options: ["2 050 300", "2 500 300", "205 300", "2 053 000"],
+                    correct: 0,
+                    exp: "Sommando: 2 000 000 + 50 000 + 300 = 2 050 300."
+                },
+                {
+                    q: "Se confrontiamo 0,100 e 0,1 si può dire che:",
+                    options: ["Sono uguali", "0,100 è maggiore", "0,1 è maggiore", "Non si possono confrontare"],
+                    correct: 0,
+                    exp: "0,100 ha la stessa quantità di valore di 0,1 (un decimo)."
+                },
+                {
+                    q: "Quale di queste affermazioni è VERA?",
+                    options: ["0,09 < 0,1", "0,09 > 0,1", "0,09 = 0,1", "0,1 < 0,01"],
+                    correct: 0,
+                    exp: "0,09 (9 centesimi) è minore di 0,10 (10 centesimi)."
+                },
+                {
+                    q: "Componi: 7 hK + 3 daK + 2 u.",
+                    options: ["730 002", "73 002", "703 002", "730 020"],
+                    correct: 0,
+                    exp: "7 hK = 700 000, 3 daK = 30 000, 0 uK, 0 h, 0 da, 2 u -> 730 002."
+                },
+                {
+                    q: "Quale numero manca per completare l'uguaglianza: 5,4 = 5 + ...?",
+                    options: ["0,4", "4", "0,04", "40"],
+                    correct: 0,
+                    exp: "5 unità + 4 decimi (0,4) = 5,4."
+                },
+                {
+                    q: "Metti il segno corretto: 999 999 ... 1 000 000.",
+                    options: ["<", ">", "=", "+"],
+                    correct: 0,
+                    exp: "999 999 ha 6 cifre, 1 000 000 ne ha 7, quindi 999 999 < 1 000 000."
+                },
+                {
+                    q: "Ordina dal minore al maggiore: 1,01 - 1,1 - 1,001.",
+                    options: ["1,001 < 1,01 < 1,1", "1,1 < 1,01 < 1,001", "1,01 < 1,001 < 1,1", "1,001 < 1,1 < 1,01"],
+                    correct: 0,
+                    exp: "1,001 (1 e 1 millesimo) < 1,010 (1 e 10 millesimi) < 1,100 (1 e 100 millesimi)."
+                },
+                {
+                    q: "A quanto equivale la scomposizione: 3 uM + 4 uK + 5 u?",
+                    options: ["3 004 005", "3 400 005", "304 005", "3 040 005"],
+                    correct: 0,
+                    exp: "3 uM (3 000 000) + 4 uK (4 000) + 5 u (5) = 3 004 005."
+                },
+                {
+                    q: "Quale numero è esattamente uguale a 3/10 + 4/100?",
+                    options: ["0,34", "0,034", "3,4", "0,7"],
+                    correct: 0,
+                    exp: "3/10 = 0,3; 4/100 = 0,04. Sommandoli si ottiene 0,34."
+                },
+                {
+                    q: "Scegli il segno corretto: 0,008 ... 0,08.",
+                    options: ["<", ">", "=", "x"],
+                    correct: 0,
+                    exp: "8 millesimi (0,008) è minore di 8 centesimi (0,080)."
+                },
+                {
+                    q: "Componi il numero: 10 + 2 + 0,3 + 0,005.",
+                    options: ["12,305", "12,35", "123,05", "1,2305"],
+                    correct: 0,
+                    exp: "12 unità intere + 3 decimi (0,3) + 0 centesimi + 5 millesimi (0,005) = 12,305."
+                },
+                {
+                    q: "Qual è il numero più grande formulabile con le cifre 5, 2, 8, 0 usandole una sola volta?",
+                    options: ["8 520", "8 502", "5 820", "8 250"],
+                    correct: 0,
+                    exp: "Mettendo le cifre in ordine decrescente: 8, 5, 2, 0 si ottiene 8 520."
+                },
+                {
+                    q: "Quale di questi numeri è compreso tra 2,34 e 2,35?",
+                    options: ["2,346", "2,339", "2,351", "2,340"],
+                    correct: 0,
+                    exp: "2,346 si trova tra 2,340 e 2,350."
+                },
+                {
+                    q: "Se confronti 0,7 e 7/10 cosa trovi?",
+                    options: ["0,7 = 7/10", "0,7 > 7/10", "0,7 < 7/10", "Non si possono confrontare"],
+                    correct: 0,
+                    exp: "0,7 e la frazione 7/10 rappresentano esattamente lo stesso valore (sette decimi)."
+                },
+                {
+                    q: "Completa la serie decrescente: 1,5 - 1,2 - 0,9 - ...",
+                    options: ["0,6", "0,7", "0,3", "0,8"],
+                    correct: 0,
+                    exp: "La serie diminuisce di 0,3 ogni volta: 0,9 - 0,3 = 0,6."
+                },
+                {
+                    q: "A quanto equivale la scomposizione 5 d + 2 m?",
+                    options: ["0,502", "0,52", "5,002", "0,052"],
+                    correct: 0,
+                    exp: "5 decimi = 0,5; 0 centesimi; 2 millesimi = 0,002 -> 0,502."
+                },
+                {
+                    q: "Quale tra questi è maggiore di 10?",
+                    options: ["10,001", "9,999", "10,000", "0,100"],
+                    correct: 0,
+                    exp: "10,001 supera 10 di 1 millesimo."
+                },
+                {
+                    q: "Metti il segno corretto: 5 G ... 500 M.",
+                    options: [">", "<", "=", "x"],
+                    correct: 0,
+                    exp: "5 G = 5 000 milioni, che è nettamente maggiore di 500 M."
+                },
+                {
+                    q: "Quale numero si ottiene sommando 6 decine di migliaia e 60 centinaia?",
+                    options: ["66 000", "60 600", "600 600", "6 600"],
+                    correct: 0,
+                    exp: "6 daK = 60 000; 60 h = 6 000. 60 000 + 6 000 = 66 000."
+                },
+                {
+                    q: "Scomponi il numero 1,001:",
+                    options: ["1 u + 1 m", "1 u + 1 d", "1 u + 1 c", "10 d + 1 m"],
+                    correct: 0,
+                    exp: "1,001 è formato da 1 unità (1) e 1 millesimo (0,001)."
+                }
+            ]
+        };
+
+        // RENDER ROOM DASHBOARD
+        function renderDashboard() {
+            const grid = document.getElementById('roomsGrid');
+            grid.innerHTML = '';
+
+            let totalUnlocked = 0;
+
+            roomsConfig.forEach((room, idx) => {
+                const isUnlocked = appState.unlockedLevels[idx];
+                const score = appState.levelScores[idx];
+                if (isUnlocked) totalUnlocked++;
+
+                const card = document.createElement('div');
+                card.className = `glass-card rounded-3xl p-6 border-2 transition-all duration-300 relative overflow-hidden ${
+                    isUnlocked ? 'border-white hover:border-brand-300 shadow-xl cursor-pointer hover:-translate-y-1' : 'border-slate-200 opacity-75 bg-slate-100/80 cursor-not-allowed'
+                }`;
+
+                if (isUnlocked) {
+                    card.onclick = () => startRoomQuiz(idx);
+                }
+
+                card.innerHTML = `
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr ${room.color} text-white flex items-center justify-center text-xl shadow-md">
+                            <i class="fa-solid ${room.icon}"></i>
+                        </div>
+                        <div>
+                            ${isUnlocked 
+                                ? `<span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full border border-emerald-300 flex items-center space-x-1">
+                                    <i class="fa-solid fa-lock-open text-xs"></i> <span>Sbloccata</span>
+                                   </span>`
+                                : `<span class="bg-slate-200 text-slate-600 text-xs font-bold px-3 py-1 rounded-full border border-slate-300 flex items-center space-x-1">
+                                    <i class="fa-solid fa-lock text-xs"></i> <span>Bloccata</span>
+                                   </span>`
+                            }
+                        </div>
+                    </div>
+                    
+                    <h3 class="font-heading font-bold text-xl text-slate-900 mb-1">${room.title}</h3>
+                    <p class="text-xs text-slate-600 mb-6 leading-relaxed">${room.desc}</p>
+                    
+                    <div class="flex items-center justify-between pt-4 border-t border-slate-200/60 text-xs font-bold">
+                        <span class="text-slate-500">Miglior Punteggio:</span>
+                        <span class="${score >= 6 ? 'text-emerald-600' : 'text-slate-700'} bg-white px-2.5 py-1 rounded-lg border border-slate-200">
+                            ${score} / 8 giusti
+                        </span>
+                    </div>
+                `;
+
+                grid.appendChild(card);
+            });
+
+            // Card 6: CERTIFICATE CARD
+            const allRoomsCleared = appState.levelScores.every(s => s >= 6);
+            const certCard = document.createElement('div');
+            certCard.className = `glass-card rounded-3xl p-6 border-2 transition-all duration-300 relative overflow-hidden ${
+                allRoomsCleared 
+                ? 'border-amber-300 bg-gradient-to-br from-amber-50 to-orange-50 shadow-2xl cursor-pointer hover:-translate-y-1' 
+                : 'border-slate-200 opacity-60 bg-slate-100 cursor-not-allowed'
+            }`;
+
+            if (allRoomsCleared) {
+                certCard.onclick = () => showScreen('certificateScreen');
+            }
+
+            certCard.innerHTML = `
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-400 to-yellow-500 text-white flex items-center justify-center text-xl shadow-lg">
+                        <i class="fa-solid fa-award"></i>
+                    </div>
+                    <span class="${allRoomsCleared ? 'bg-amber-100 text-amber-800 border-amber-300' : 'bg-slate-200 text-slate-600 border-slate-300'} text-xs font-bold px-3 py-1 rounded-full border flex items-center space-x-1">
+                        <i class="fa-solid ${allRoomsCleared ? 'fa-certificate' : 'fa-lock'} text-xs"></i> 
+                        <span>${allRoomsCleared ? 'DISPONIBILE!' : 'Sblocca con 5 Stanze'}</span>
+                    </span>
+                </div>
+                
+                <h3 class="font-heading font-bold text-xl text-slate-900 mb-1">ATTESTATO FINALE</h3>
+                <p class="text-xs text-slate-600 mb-6 leading-relaxed">Completa tutte e 5 le stanze con almeno 6/8 per personalizzare e stampare il tuo Diploma Ufficiale!</p>
+                
+                <div class="pt-4 border-t border-amber-200/60 text-center">
+                    <button class="${allRoomsCleared ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white hover:from-amber-600 hover:to-orange-600 shadow-md' : 'bg-slate-300 text-slate-500 cursor-not-allowed'} w-full font-heading font-bold py-2 px-4 rounded-xl text-xs transition">
+                        ${allRoomsCleared ? 'VISUALIZZA E STAMPA' : 'COMPLETA I LIVELLI'}
+                    </button>
+                </div>
+            `;
+            grid.appendChild(certCard);
+
+            // Update top bar stats
+            document.getElementById('globalStars').innerText = `${appState.levelScores.filter(s => s >= 6).length} / 5 Stanze Vinte`;
+        }
+
+        // SCREEN NAVIGATION SYSTEM
+        function showScreen(screenId) {
+            ['welcomeScreen', 'homeScreen', 'quizScreen', 'certificateScreen'].forEach(id => {
+                const el = document.getElementById(id);
+                if (id === screenId) {
+                    el.classList.remove('hidden');
+                } else {
+                    el.classList.add('hidden');
+                }
+            });
+
+            if (screenId === 'homeScreen') {
+                renderDashboard();
+            } else if (screenId === 'certificateScreen') {
+                // set current date on cert
+                const now = new Date();
+                document.getElementById('certDate').innerText = `Data di Conseguimento: ${now.toLocaleDateString('it-IT')}`;
+            }
+        }
+
+        // START QUIZ IN SELECTED ROOM
+        function startRoomQuiz(roomIdx) {
+            appState.currentRoomIndex = roomIdx;
+            appState.currentQuestionIdx = 0;
+            appState.roomScore = 0;
+
+            // Select 8 random questions from pool of 30
+            const pool = questionBank[roomIdx];
+            const shuffled = [...pool].sort(() => Math.random() - 0.5);
+            appState.currentQuestions = shuffled.slice(0, 8);
+
+            document.getElementById('roomBadge').innerText = roomsConfig[roomIdx].title;
+            showScreen('quizScreen');
+            renderQuestion();
+        }
+
+        // RENDER CURRENT QUESTION
+        function renderQuestion() {
+            const qData = appState.currentQuestions[appState.currentQuestionIdx];
+            
+            document.getElementById('questionProgressText').innerText = `Quesito ${appState.currentQuestionIdx + 1} di 8`;
+            document.getElementById('scoreText').innerText = `Punteggio: ${appState.roomScore}/8`;
+            
+            const progressPct = ((appState.currentQuestionIdx) / 8) * 100;
+            document.getElementById('progressBar').style.width = `${progressPct}%`;
+
+            document.getElementById('questionText').innerText = qData.q;
+
+            const optsContainer = document.getElementById('optionsContainer');
+            optsContainer.innerHTML = '';
+
+            // Shuffle options for variation while tracking index
+            const optionsWithOriginalIdx = qData.options.map((opt, idx) => ({ text: opt, originalIdx: idx }));
+            const shuffledOpts = [...optionsWithOriginalIdx].sort(() => Math.random() - 0.5);
+
+            shuffledOpts.forEach((optObj, idx) => {
+                const letter = String.fromCharCode(65 + idx); // A, B, C, D
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-4 rounded-2xl border-2 border-slate-200 bg-white hover:border-brand-400 hover:bg-brand-50/50 transition-all duration-150 flex items-center space-x-3 font-semibold text-slate-800 shadow-sm btn-bounce";
+                btn.onclick = () => handleAnswer(optObj.originalIdx, qData);
+
+                btn.innerHTML = `
+                    <span class="w-8 h-8 rounded-xl bg-slate-100 text-slate-700 font-bold flex items-center justify-center text-sm border border-slate-200 shrink-0">
+                        ${letter}
+                    </span>
+                    <span class="text-base md:text-lg leading-snug">${optObj.text}</span>
+                `;
+                optsContainer.appendChild(btn);
+            });
+        }
+
+        // HANDLE USER ANSWER
+        function handleAnswer(selectedIndex, qData) {
+            const isCorrect = (selectedIndex === qData.correct);
+
+            if (isCorrect) {
+                appState.roomScore++;
+                AudioEngine.playCorrect();
+            } else {
+                AudioEngine.playWrong();
+            }
+
+            // Show explanation modal
+            showExplanationModal(isCorrect, qData);
+        }
+
+        // SHOW EXPLANATION MODAL
+        function showExplanationModal(isCorrect, qData) {
+            const modal = document.getElementById('explanationModal');
+            const content = document.getElementById('explanationContent');
+            const resHeader = document.getElementById('resultHeader');
+            const resIcon = document.getElementById('resultIcon');
+            const resTitle = document.getElementById('resultTitle');
+            const resSubtitle = document.getElementById('resultSubtitle');
+            const expText = document.getElementById('explanationText');
+
+            if (isCorrect) {
+                resHeader.className = "flex items-center space-x-3 mb-4 p-3 rounded-2xl bg-emerald-50 border border-emerald-200";
+                resIcon.className = "w-12 h-12 rounded-2xl bg-emerald-500 flex items-center justify-center text-white text-2xl font-bold shadow-md shrink-0";
+                resIcon.innerHTML = `<i class="fa-solid fa-check"></i>`;
+                resTitle.className = "font-heading font-bold text-xl text-emerald-900";
+                resTitle.innerText = "Risposta Esatta! Ottimo lavoro!";
+                resSubtitle.innerText = "Ecco il passaggio spiegato:";
+            } else {
+                resHeader.className = "flex items-center space-x-3 mb-4 p-3 rounded-2xl bg-rose-50 border border-rose-200";
+                resIcon.className = "w-12 h-12 rounded-2xl bg-rose-500 flex items-center justify-center text-white text-2xl font-bold shadow-md shrink-0";
+                resIcon.innerHTML = `<i class="fa-solid fa-xmark"></i>`;
+                resTitle.className = "font-heading font-bold text-xl text-rose-900";
+                resTitle.innerText = "Non è corretto, ma si impara!";
+                resSubtitle.innerText = "Scopri perché con la spiegazione:";
+            }
+
+            expText.innerHTML = `<strong>Spiegazione:</strong> ${qData.exp}`;
+
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                content.classList.remove('scale-95', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        // NEXT QUESTION OR FINISH ROOM
+        function nextQuestion() {
+            const modal = document.getElementById('explanationModal');
+            const content = document.getElementById('explanationContent');
+
+            content.classList.remove('scale-100', 'opacity-100');
+            content.classList.add('scale-95', 'opacity-0');
+
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                appState.currentQuestionIdx++;
+
+                if (appState.currentQuestionIdx < 8) {
+                    renderQuestion();
+                } else {
+                    finishRoomQuiz();
+                }
+            }, 150);
+        }
+
+        // FINISH ROOM QUIZ & EVALUATE
+        function finishRoomQuiz() {
+            const currentRoom = appState.currentRoomIndex;
+            const score = appState.roomScore;
+
+            if (score > appState.levelScores[currentRoom]) {
+                appState.levelScores[currentRoom] = score;
+            }
+
+            const isPassed = (score >= 6);
+
+            if (isPassed) {
+                // Unlock next room if available
+                if (currentRoom + 1 < appState.unlockedLevels.length) {
+                    appState.unlockedLevels[currentRoom + 1] = true;
+                }
+                
+                AudioEngine.playVictory();
+                triggerBalloons();
+
+                setTimeout(() => {
+                    alert(`COMPLIMENTI! 🎉\nHai superato la Stanza "${roomsConfig[currentRoom].title}" con ${score}/8 risposte corrette!\nI palloncini festeggiano la tua vittoria!`);
+                    showScreen('homeScreen');
+                }, 400);
+            } else {
+                alert(`Peccato! Hai totalizzato ${score}/8 risposte corrette.\nPer superare il livello servono almeno 6 risposte esatte. Riprova: la pratica ti renderà imbattibile! 💪`);
+                showScreen('homeScreen');
+            }
+        }
+
+        // BALLOONS CELEBRATION ANIMATION
+        function triggerBalloons() {
+            const container = document.getElementById('balloonContainer');
+            container.innerHTML = '';
+
+            const colors = ['#ef4444', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899'];
+
+            for (let i = 0; i < 30; i++) {
+                const balloon = document.createElement('div');
+                balloon.className = 'balloon';
+                balloon.style.left = `${Math.random() * 90 + 5}%`;
+                balloon.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                balloon.style.animationDelay = `${Math.random() * 1.5}s`;
+                balloon.style.animationDuration = `${3 + Math.random() * 2}s`;
+                container.appendChild(balloon);
+            }
+
+            setTimeout(() => {
+                container.innerHTML = '';
+            }, 6000);
+        }
+
+        function confirmExitQuiz() {
+            if (confirm("Sei sicuro di voler uscire? I progressi della stanza corrente andranno persi.")) {
+                showScreen('homeScreen');
+            }
+        }
+
+        function updateCertificateName(nameText) {
+            const display = document.getElementById('certStudentName');
+            display.innerText = nameText.trim() !== '' ? nameText : 'Campione di Matematica';
+        }
+
+        // INIT APP ON LOAD
+        window.onload = function() {
+            renderDashboard();
+        };
+    </script>
+</body>
+</html>

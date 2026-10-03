@@ -145,6 +145,15 @@
             background: #cbd5e1;
             border-radius: 8px;
         }
+
+        /* Pulse animation for Speech synthesis reading */
+        .speaking-pulse {
+            animation: pulseBg 1.2s infinite alternate;
+        }
+        @keyframes pulseBg {
+            from { transform: scale(1); }
+            to { transform: scale(1.05); }
+        }
     </style>
 </head>
 <body class="text-slate-800 antialiased flex flex-col justify-between">
@@ -163,12 +172,12 @@
             </div>
 
             <div class="flex items-center space-x-3">
-                <button id="soundToggleBtn" onclick="toggleSound()" class="p-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 transition" title="Attiva/Disattiva Audio">
+                <button id="soundToggleBtn" onclick="toggleSound()" class="p-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 transition" title="Attiva/Disattiva Audio Effect">
                     <i id="soundIcon" class="fa-solid fa-volume-high text-lg"></i>
                 </button>
                 <div class="bg-amber-100 border border-amber-300 px-3 py-1.5 rounded-xl flex items-center space-x-2">
                     <i class="fa-solid fa-star text-amber-500 text-sm"></i>
-                    <span id="globalStars" class="font-bold text-amber-900 text-sm">0 / 5 Stranze</span>
+                    <span id="globalStars" class="font-bold text-amber-900 text-sm">0 / 5 Stanze</span>
                 </div>
             </div>
         </div>
@@ -263,10 +272,19 @@
 
                 <!-- Question Card -->
                 <div class="glass-card rounded-3xl p-6 md:p-8 border border-white shadow-xl relative">
-                    <div class="mb-6">
-                        <span id="questionCategory" class="text-xs font-bold uppercase tracking-wider text-mathPurple bg-purple-100 px-3 py-1 rounded-full border border-purple-200 inline-block mb-3">
+                    <div class="flex items-center justify-between gap-2 mb-4">
+                        <span id="questionCategory" class="text-xs font-bold uppercase tracking-wider text-mathPurple bg-purple-100 px-3 py-1 rounded-full border border-purple-200 inline-block">
                             Invalsi Classe V
                         </span>
+
+                        <!-- ACCESSIBILITY TTS BUTTON FOR QUESTION -->
+                        <button id="ttsQuestionBtn" onclick="readQuestionTTS()" class="flex items-center space-x-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold text-xs px-3.5 py-1.5 rounded-xl shadow transition btn-bounce" title="Leggi quesito ad alta voce (Sintesi Vocale)">
+                            <i id="ttsQuestionIcon" class="fa-solid fa-volume-high text-sm"></i>
+                            <span id="ttsQuestionText">Ascolta Quesito</span>
+                        </button>
+                    </div>
+
+                    <div class="mb-6">
                         <h3 id="questionText" class="text-xl md:text-2xl font-heading font-bold text-slate-900 leading-snug">
                             Testo della domanda...
                         </h3>
@@ -285,10 +303,18 @@
             <div class="bg-white rounded-3xl max-w-lg w-full p-6 md:p-8 shadow-2xl border border-slate-100 transform transition-all scale-95 opacity-0 duration-200" id="explanationContent">
                 <div id="resultHeader" class="flex items-center space-x-3 mb-4 p-3 rounded-2xl">
                     <div id="resultIcon" class="w-12 h-12 rounded-2xl flex items-center justify-center text-white text-2xl font-bold"></div>
-                    <div>
+                    <div class="flex-grow">
                         <h4 id="resultTitle" class="font-heading font-bold text-xl">Risposta Corretta!</h4>
                         <p id="resultSubtitle" class="text-xs text-slate-600">Ecco la spiegazione dettagliata del quesito:</p>
                     </div>
+                </div>
+
+                <div class="flex justify-end mb-2">
+                    <!-- ACCESSIBILITY TTS BUTTON FOR EXPLANATION -->
+                    <button id="ttsExplanationBtn" onclick="readExplanationTTS()" class="flex items-center space-x-2 bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold text-xs px-3 py-1.5 rounded-xl border border-amber-300 transition" title="Ascolta Spiegazione">
+                        <i id="ttsExpIcon" class="fa-solid fa-volume-high text-sm text-amber-600"></i>
+                        <span>Ascolta Spiegazione</span>
+                    </button>
                 </div>
 
                 <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200 mb-6 text-slate-700 text-sm md:text-base leading-relaxed custom-scrollbar max-h-60 overflow-y-auto">
@@ -325,7 +351,7 @@
                     <p>La presente applicazione web è sviluppata esclusivamente per scopi didattici e d'allenamento scolastico.</p>
                     <ul class="list-disc list-inside space-y-1 text-slate-600">
                         <li><strong>Nessuna raccolta dati:</strong> L'applicazione non richiede registrazione, non utilizza cookie di profilazione e non trasmette alcun dato personale a server esterni.</li>
-                        <li><strong>Elaborazione Locale:</strong> I dati inseriti (come il nome per la personalizzazione dell'attestato) ed i punteggi ottenuti sono trattati esclusivamente nella memoria del browser del tuo dispositivo.Per il funzionamento tecnico l'app è ospitata su Netfily, che può registrare dati tecnici di navigazione (es. indirizzo IP) secondo la propria informativa.</li>
+                        <li><strong>Elaborazione Locale:</strong> I dati inseriti (come il nome per la personalizzazione dell'attestato) ed i punteggi ottenuti sono trattati esclusivamente nella memoria del browser del tuo dispositivo. Per il funzionamento tecnico l'app è ospitata su Netlify, che può registrare dati tecnici di navigazione (es. indirizzo IP) secondo la propria informativa.</li>
                     </ul>
                     <p class="pt-2 text-slate-500 italic">Per chiarimenti o informazioni sui contenuti didattici, è possibile contattare l'autrice Claudia Bartoli.</p>
                 </div>
@@ -428,11 +454,11 @@
 
     </main>
 
-    <!-- Footer -->
-    <footer class="w-full bg-white/80 border-t border-slate-200 py-3.5 px-4 text-center text-xs text-slate-600 no-print mt-8 shadow-inner">
-        <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+    <!-- Footer (Centered Privacy & Copyright) -->
+    <footer class="w-full bg-white/80 border-t border-slate-200 py-4 px-4 text-center text-xs text-slate-600 no-print mt-8 shadow-inner">
+        <div class="max-w-4xl mx-auto flex flex-col items-center justify-center space-y-2">
             <p>© 2026 MatematiCAMP • A cura di <span class="font-semibold text-slate-700">Claudia Bartoli</span> • Tutti i diritti riservati</p>
-            <button onclick="togglePrivacyModal()" class="text-slate-500 hover:text-brand-600 underline font-medium flex items-center space-x-1.5 transition">
+            <button onclick="togglePrivacyModal()" class="text-slate-500 hover:text-brand-600 underline font-medium inline-flex items-center space-x-1.5 transition">
                 <i class="fa-solid fa-user-shield text-xs"></i>
                 <span>Informativa Privacy</span>
             </button>
@@ -451,8 +477,105 @@
             currentQuestions: [],
             currentQuestionIdx: 0,
             roomScore: 0,
-            soundEnabled: true
+            soundEnabled: true,
+            isSpeaking: false
         };
+
+        // ACCESSIBILITY TEXT-TO-SPEECH (TTS) SYSTEM USING WEB SPEECH API
+        const TTSEngine = {
+            speak(text, onEndCallback) {
+                if (!('speechSynthesis' in window)) {
+                    alert("La sintesi vocale non è supportata dal tuo browser.");
+                    return;
+                }
+                this.stop(); // Stop any ongoing speech
+
+                // Clean text for natural reading
+                let cleanText = text
+                    .replace(/[\u2022\u25CF]/g, '') // remove bullet points
+                    .replace(/\.\.\./g, ' incognita ')
+                    .replace(/>/g, ' maggiore di ')
+                    .replace(/</g, ' minore di ')
+                    .replace(/=/g, ' uguale a ')
+                    .replace(/daK/gi, ' decine di migliaia ')
+                    .replace(/uK/gi, ' unità di migliaia ')
+                    .replace(/uM/gi, ' unità di milioni ')
+                    .replace(/daM/gi, ' decine di milioni ')
+                    .replace(/hM/gi, ' centinaia di milioni ')
+                    .replace(/uG/gi, ' unità di miliardi ');
+
+                const utterance = new SpeechSynthesisUtterance(cleanText);
+                utterance.lang = 'it-IT';
+                utterance.rate = 0.95; // slightly slower for primary school clarity
+                utterance.pitch = 1.05; // clear and friendly pitch
+
+                appState.isSpeaking = true;
+
+                utterance.onend = () => {
+                    appState.isSpeaking = false;
+                    if (onEndCallback) onEndCallback();
+                    this.updateTTSButtonsUI();
+                };
+
+                utterance.onerror = () => {
+                    appState.isSpeaking = false;
+                    this.updateTTSButtonsUI();
+                };
+
+                window.speechSynthesis.speak(utterance);
+                this.updateTTSButtonsUI();
+            },
+
+            stop() {
+                if ('speechSynthesis' in window) {
+                    window.speechSynthesis.cancel();
+                }
+                appState.isSpeaking = false;
+                this.updateTTSButtonsUI();
+            },
+
+            toggle(text, onEndCallback) {
+                if (appState.isSpeaking) {
+                    this.stop();
+                } else {
+                    this.speak(text, onEndCallback);
+                }
+            },
+
+            updateTTSButtonsUI() {
+                const qBtnIcon = document.getElementById('ttsQuestionIcon');
+                const qBtnText = document.getElementById('ttsQuestionText');
+                if (qBtnIcon && qBtnText) {
+                    if (appState.isSpeaking) {
+                        qBtnIcon.className = "fa-solid fa-square text-sm";
+                        qBtnText.innerText = "Interrompi";
+                    } else {
+                        qBtnIcon.className = "fa-solid fa-volume-high text-sm";
+                        qBtnText.innerText = "Ascolta Quesito";
+                    }
+                }
+            }
+        };
+
+        function readQuestionTTS() {
+            const qData = appState.currentQuestions[appState.currentQuestionIdx];
+            if (!qData) return;
+
+            let fullText = `Quesito: ${qData.q}. `;
+            fullText += `Opzioni di risposta: `;
+            qData.options.forEach((opt, idx) => {
+                const letter = String.fromCharCode(65 + idx);
+                fullText += `Opzione ${letter}: ${opt}. `;
+            });
+
+            TTSEngine.toggle(fullText);
+        }
+
+        function readExplanationTTS() {
+            const expTextEl = document.getElementById('explanationText');
+            if (!expTextEl) return;
+            TTSEngine.toggle(expTextEl.innerText);
+        }
 
         // AUDIO SYNTHESIZER USING WEB AUDIO API (NO EXTERNAL FILES NEEDED)
         const AudioEngine = {
@@ -1592,6 +1715,8 @@
 
         // SCREEN NAVIGATION SYSTEM
         function showScreen(screenId) {
+            TTSEngine.stop(); // stop any audio speech when navigating
+
             ['welcomeScreen', 'homeScreen', 'quizScreen', 'certificateScreen'].forEach(id => {
                 const el = document.getElementById(id);
                 if (id === screenId) {
@@ -1628,6 +1753,8 @@
 
         // RENDER CURRENT QUESTION
         function renderQuestion() {
+            TTSEngine.stop(); // reset TTS
+
             const qData = appState.currentQuestions[appState.currentQuestionIdx];
             
             document.getElementById('questionProgressText').innerText = `Quesito ${appState.currentQuestionIdx + 1} di 8`;
@@ -1663,6 +1790,8 @@
 
         // HANDLE USER ANSWER
         function handleAnswer(selectedIndex, qData) {
+            TTSEngine.stop();
+
             const isCorrect = (selectedIndex === qData.correct);
 
             if (isCorrect) {
@@ -1713,6 +1842,8 @@
 
         // NEXT QUESTION OR FINISH ROOM
         function nextQuestion() {
+            TTSEngine.stop();
+
             const modal = document.getElementById('explanationModal');
             const content = document.getElementById('explanationContent');
 
@@ -1784,6 +1915,7 @@
         }
 
         function confirmExitQuiz() {
+            TTSEngine.stop();
             if (confirm("Sei sicuro di voler uscire? I progressi della stanza corrente andranno persi.")) {
                 showScreen('homeScreen');
             }
